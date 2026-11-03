@@ -41,7 +41,7 @@ The key is sent as `Authorization: Bearer <key>`. It is never logged and is reda
 
 | Variable | Description |
 |---|---|
-| `FREEITSM_BASE_URL` | FreeITSM install URL. https only (http allowed for `localhost`/`127.0.0.1`). Userinfo, query strings and fragments are rejected. Redirects are never followed. |
+| `FREEITSM_BASE_URL` | FreeITSM install URL. https only (http allowed for `localhost`/`127.0.0.1`). Userinfo, query strings and fragments are rejected. Redirects are never followed. https to private/internal IPs is allowed on purpose: only the operator sets the base URL (it is never taken from a request), so this is not a per-request SSRF path. |
 | `FREEITSM_API_KEY` | API key (env auth mode). |
 | `FREEITSM_TOOL_TIERS` | Comma-separated tiers to expose: `read`, `write`, `admin`. Default `read`. Tools outside the enabled tiers are neither listed nor callable. |
 | `AUTH_MODE` | `env` (default) or `gateway` (HTTP transport only). |

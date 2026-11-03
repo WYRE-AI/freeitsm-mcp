@@ -58,6 +58,9 @@ const KNOWN_PLACEHOLDER_SECRETS = new Set([
   "s2s-secret",
 ]);
 
+/** Pattern placeholders such as "xxxxxxxx..." or "your-secret-here" (same as pandora). */
+const PLACEHOLDER_PATTERN = /^(x+|0+|your[-_ ]?(s2s[-_ ])?secret.*|change[-_ ]?me.*|replace[-_ ]?(with|me).*)$/i;
+
 const LOOPBACK_HOST = "127.0.0.1";
 
 const MISSING_S2S_SECRET_ERROR =
@@ -119,7 +122,7 @@ export function isLoopbackBindHost(host: string): boolean {
 export function resolveS2sSecret(env: NodeJS.ProcessEnv = process.env): { secret: string; insecureDev: boolean } {
   // SECURITY-REVIEW: S2S secret resolution (fail closed; dev bypass only when the secret is empty).
   const raw = (env.CONDUIT_S2S_SECRET ?? "").trim();
-  if (raw && KNOWN_PLACEHOLDER_SECRETS.has(raw.toLowerCase())) {
+  if (raw && (KNOWN_PLACEHOLDER_SECRETS.has(raw.toLowerCase()) || PLACEHOLDER_PATTERN.test(raw))) {
     refuseStart(PLACEHOLDER_S2S_SECRET_ERROR);
   }
   if (raw && raw.length < 32) {

@@ -50,6 +50,13 @@ describe("S2S secret resolution", () => {
     exitSpy();
     expect(() => resolveS2sSecret({ CONDUIT_S2S_SECRET: v, MCP_ALLOW_INSECURE_DEV: "1" })).toThrow(/exit:1/);
   });
+  it.each(["x".repeat(40), "X".repeat(64), "0".repeat(40), "your-secret-goes-here-please-replace", "CHANGEME-" + "a".repeat(30), "replace-with-" + "a".repeat(30)])(
+    "rejects pattern placeholder %s even at 32+ chars",
+    (v) => {
+      exitSpy();
+      expect(() => resolveS2sSecret({ CONDUIT_S2S_SECRET: v })).toThrow(/exit:1/);
+    },
+  );
   it("rejects empty without the dev flag, allows with it", () => {
     exitSpy();
     expect(() => resolveS2sSecret({})).toThrow(/exit:1/);
