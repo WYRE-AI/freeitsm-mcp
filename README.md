@@ -47,8 +47,9 @@ The key is sent as `Authorization: Bearer <key>`. It is never logged and is reda
 | `AUTH_MODE` | `env` (default) or `gateway` (HTTP transport only). |
 | `MCP_TRANSPORT` | `stdio` (default) or `http`. |
 | `MCP_HTTP_PORT` / `MCP_HTTP_HOST` | HTTP listen port (default 8080) and host (default `127.0.0.1`; the container sets `0.0.0.0`). |
-| `CONDUIT_S2S_SECRET` | Required for the HTTP transport; requests must carry a valid `X-Gateway-S2S` header. |
+| `CONDUIT_S2S_SECRET` | Required for the HTTP transport; must be at least 32 characters and not a placeholder (startup fails otherwise); requests must carry a valid `X-Gateway-S2S` header. |
 | `MCP_ALLOW_INSECURE_DEV` | `1` allows an empty secret for local development; binds `127.0.0.1` only. |
+| `MCP_ALLOWED_HOSTS` | Comma-separated extra `Host` header values (hostname only: no port; IPv6 in brackets) accepted on the HTTP transport, in addition to `localhost`, `127.0.0.1`, `[::1]`. Mismatches get HTTP 403 (DNS-rebinding protection). The check is always on for loopback binds, in insecure-dev mode, or when this variable is set; set it to your public hostname when binding `0.0.0.0` behind a proxy. |
 | `FREEITSM_CA_CERT_FILE` | Optional PEM CA bundle for installs behind a private CA. |
 | `LOG_LEVEL` | `debug`, `info` (default), `warn`, `error`. |
 

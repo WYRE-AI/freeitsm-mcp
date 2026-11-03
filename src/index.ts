@@ -38,7 +38,7 @@ import { logger } from "./utils/logger.js";
 import { verifyS2sHeader, S2S_HEADER } from "./s2s-verify.js";
 
 /** Per-request credentials in gateway mode; isolates concurrent tenants. */
-const requestCredentials = new AsyncLocalStorage<FreeItsmCredentials>();
+export const requestCredentials = new AsyncLocalStorage<FreeItsmCredentials>();
 
 /**
  * Public example values. A copied placeholder must not verify as a real secret.
@@ -74,6 +74,22 @@ const INSECURE_DEV_WARNING =
   "HTTP /mcp is starting with service-to-service authentication DISABLED, bound to 127.0.0.1 only. " +
   "Local development only; do not expose this port.";
 
+/** Set once startHttpTransport selects gateway auth (also covers direct programmatic starts). */
+let gatewayStarted = false;
+
+function isGatewayAuth(env: NodeJS.ProcessEnv = process.env): boolean {
+  return gatewayStarted || env.MCP_TRANSPORT === "http" && (env.AUTH_MODE || "env").trim() === "gateway";
+}
+
+/** Gateway mode never falls back to environment credentials. */
+export function resolveRequestCredentials(env: NodeJS.ProcessEnv = process.env): FreeItsmCredentials | { error: string } {
+  const scoped = requestCredentials.getStore();
+  if (scoped) return scoped;
+  // SECURITY-REVIEW: gateway mode never falls back to environment credentials.
+  if (isGatewayAuth(env)) return { error: "Missing per-request credentials (gateway mode)." };
+  return getCredentials(env);
+}
+
 function refuseStart(message: string): never {
   logger.error(message);
   process.exit(1);
@@ -84,7 +100,7 @@ function headerValue(value: string | string[] | undefined): string | undefined {
 }
 
 /** 127.0.0.1, the rest of 127.0.0.0/8, localhost, and ::1. */
-function isLoopbackBindHost(host: string): boolean {
+export function isLoopbackBindHost(host: string): boolean {
   const normalized = host.trim().toLowerCase().replace(/^\[(.+)\]$/, "$1");
   if (normalized === "localhost" || normalized === "::1") return true;
   const bare = normalized.startsWith("::ffff:") ? normalized.slice("::ffff:".length) : normalized;
@@ -100,11 +116,14 @@ function isLoopbackBindHost(host: string): boolean {
  * flag may bypass, and that bypass does not check X-Gateway-S2S.
  * The secret value is never written to logs.
  */
-function resolveS2sSecret(env: NodeJS.ProcessEnv = process.env): { secret: string; insecureDev: boolean } {
+export function resolveS2sSecret(env: NodeJS.ProcessEnv = process.env): { secret: string; insecureDev: boolean } {
   // SECURITY-REVIEW: S2S secret resolution (fail closed; dev bypass only when the secret is empty).
   const raw = (env.CONDUIT_S2S_SECRET ?? "").trim();
   if (raw && KNOWN_PLACEHOLDER_SECRETS.has(raw.toLowerCase())) {
     refuseStart(PLACEHOLDER_S2S_SECRET_ERROR);
+  }
+  if (raw && raw.length < 32) {
+    refuseStart("Refusing to start HTTP transport: CONDUIT_S2S_SECRET must be at least 32 characters.");
   }
   if (raw) return { secret: raw, insecureDev: false };
   if (env.MCP_ALLOW_INSECURE_DEV === "1") {
@@ -157,7 +176,7 @@ export function createFreshServer(): Server {
     logger.info("Tool call received", { tool: name });
     try {
       // Gateway mode: the per-request key. Env mode: FREEITSM_API_KEY.
-      const credentials = requestCredentials.getStore() ?? getCredentials();
+      const credentials = resolveRequestCredentials();
       if ("error" in credentials) {
         return { content: [{ type: "text", text: `Error: ${credentials.error}` }], isError: true };
       }
@@ -184,6 +203,42 @@ async function handleMcpRequest(
   res: ServerResponse,
   creds?: FreeItsmCredentials,
 ): Promise<void> {
+  // Bound buffering before handing a parsed body to the SDK (including chunked uploads).
+  let parsedBody: unknown;
+  if (req.method === "POST") {
+    const limit = 1024 * 1024;
+    const tooLarge = () => {
+      if (res.headersSent) return;
+      res.writeHead(413, { "Content-Type": "application/json", Connection: "close" });
+      res.end(JSON.stringify({ error: "Request body exceeds 1 MiB" }));
+      req.resume();
+    };
+    if (Number(req.headers["content-length"]) > limit) {
+      tooLarge();
+      return;
+    }
+    try {
+      const chunks: Buffer[] = [];
+      let size = 0;
+      // Early return must not destroy the socket before the 413 is flushed.
+      for await (const chunk of req.iterator({ destroyOnReturn: false })) {
+        const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        size += buffer.length;
+        if (size > limit) {
+          tooLarge();
+          return;
+        }
+        chunks.push(buffer);
+      }
+      parsedBody = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    } catch {
+      if (!res.headersSent) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Invalid JSON request body" }));
+      }
+      return;
+    }
+  }
   const server = createFreshServer();
   const transport = new StreamableHTTPServerTransport({ enableJsonResponse: true });
 
@@ -195,9 +250,9 @@ async function handleMcpRequest(
   try {
     await server.connect(transport);
     if (creds) {
-      await requestCredentials.run(creds, () => transport.handleRequest(req, res));
+      await requestCredentials.run(creds, () => transport.handleRequest(req, res, parsedBody));
     } else {
-      await transport.handleRequest(req, res);
+      await transport.handleRequest(req, res, parsedBody);
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -237,6 +292,7 @@ export async function startHttpTransport(): Promise<HttpServer> {
     refuseStart(`Refusing to start HTTP transport: AUTH_MODE must be "env" or "gateway" (got "${authMode}").`);
   }
   const isGatewayMode = authMode === "gateway";
+  if (isGatewayMode) gatewayStarted = true;
   if (!isGatewayMode) {
     const credentials = getCredentials();
     if ("error" in credentials) {
@@ -244,13 +300,33 @@ export async function startHttpTransport(): Promise<HttpServer> {
     }
   }
 
+  const checkHost = process.env.MCP_ALLOWED_HOSTS !== undefined || !s2sSecret || isLoopbackBindHost(host);
+  const configuredHosts = (process.env.MCP_ALLOWED_HOSTS ?? "").split(",").map((h) => h.trim()).filter(Boolean);
+  for (const entry of configuredHosts) {
+    if (entry.includes(":") && !/^\[[0-9a-f:]+\]$/i.test(entry)) {
+      logger.warn(`MCP_ALLOWED_HOSTS entry "${entry}" contains a port or unbracketed IPv6 address and will never match.`);
+    }
+  }
+  const allowedHosts = new Set([
+    "localhost", "127.0.0.1", "[::1]",
+    ...configuredHosts.map((h) => h.toLowerCase()),
+  ]);
   const httpServer = createHttpServer((req: IncomingMessage, res: ServerResponse) => {
-    const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
+    const url = new URL(req.url || "/", "http://localhost");
 
     // Shallow, unauthenticated liveness probe. Must NOT read credentials or call upstream.
     if (url.pathname === "/health" || url.pathname === "/healthz") {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ status: "ok" }));
+      return;
+    }
+
+    // Match the entire Host authority, allowing only an optional numeric port.
+    const authority = req.headers.host?.toLowerCase();
+    const hostMatch = authority?.match(/^(\[[0-9a-f:]+\]|[a-z0-9.-]+)(?::([0-9]{1,5}))?$/);
+    if (checkHost && (!hostMatch || (hostMatch[2] !== undefined && (Number(hostMatch[2]) < 1 || Number(hostMatch[2]) > 65535)) || !allowedHosts.has(hostMatch[1]))) {
+      res.writeHead(403, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Host not allowed" }));
       return;
     }
 

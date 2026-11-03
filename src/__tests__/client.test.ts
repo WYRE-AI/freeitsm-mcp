@@ -110,22 +110,22 @@ describe("request construction", () => {
   it("URL-encodes path params and sends JSON bodies on POST", async () => {
     const fetchMock = vi.fn(async () => jsonResponse({ data: { id: 1 } }, 201));
     vi.stubGlobal("fetch", fetchMock);
-    await execute(endpoint("freeitsm_ticket_note_add"), { id: "4/2 ?x#", text: "hello", is_internal: false }, credentials);
+    await execute(endpoint("freeitsm_ticket_note_add"), { id: "42 ?x#", text: "hello", is_internal: false }, credentials);
     const { url, init, headers } = lastCall(fetchMock);
-    expect(url).toBe("https://itsm.example.com/api/v1/tickets/4%2F2%20%3Fx%23/notes");
+    expect(url).toBe("https://itsm.example.com/api/v1/tickets/42%20%3Fx%23/notes");
     expect(init.method).toBe("POST");
     expect(headers["Content-Type"]).toBe("application/json");
     expect(JSON.parse(init.body as string)).toEqual({ text: "hello", is_internal: false });
   });
 
-  it("passes extra body fields through on PATCH and keeps the id out of the body", async () => {
+  it("drops undeclared fields on PATCH and keeps the id out of the body", async () => {
     const fetchMock = vi.fn(async () => jsonResponse({ data: {} }));
     vi.stubGlobal("fetch", fetchMock);
     await execute(endpoint("freeitsm_ticket_update"), { id: 7, priority: "High", custom_extra: 1 }, credentials);
     const { url, init } = lastCall(fetchMock);
     expect(url).toBe("https://itsm.example.com/api/v1/tickets/7");
     expect(init.method).toBe("PATCH");
-    expect(JSON.parse(init.body as string)).toEqual({ priority: "High", custom_extra: 1 });
+    expect(JSON.parse(init.body as string)).toEqual({ priority: "High" });
   });
 
   it("rejects a missing path or required param without calling the API", async () => {

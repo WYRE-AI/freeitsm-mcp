@@ -132,8 +132,9 @@ function buildRequest(
   endpoint: EndpointSpec,
   args: Record<string, unknown>,
   creds: FreeItsmCredentials,
-): RequestParts | { missing: string[] } {
+): RequestParts | { missing: string[] } | { invalid: string[] } {
   const missing: string[] = [];
+  const invalid: string[] = [];
   let path = endpoint.path;
   const query = new URLSearchParams();
   const body: Record<string, unknown> = {};
@@ -144,18 +145,27 @@ function buildRequest(
     const absent = value === undefined || value === null || value === "";
     if (spec.in === "path") {
       if (absent) missing.push(key);
-      else path = path.replace(`{${key}}`, encodeURIComponent(String(value)));
+      else {
+        const segment = String(value);
+        if (segment === "." || segment === ".." || segment.includes("/") || segment.includes("\\") || segment.trim() === "") {
+          invalid.push(key);
+          continue;
+        }
+        path = path.replace(`{${key}}`, encodeURIComponent(segment));
+      }
     } else if (spec.required && absent) {
       missing.push(key);
     }
   }
+  if (invalid.length > 0) return { invalid };
   if (missing.length > 0) return { missing };
 
   for (const [key, value] of Object.entries(args)) {
     if (value === undefined || value === null) continue;
     const spec = endpoint.params[key];
-    if (spec?.in === "path") continue;
-    const location = spec?.in ?? (isBodyMethod ? "body" : "query");
+    if (!spec) continue; // only declared params are forwarded
+    if (spec.in === "path") continue;
+    const location = spec.in;
     // A body-typed value on a GET/DELETE has nowhere to go but the query string.
     if (location === "body" && isBodyMethod) body[key] = value;
     else query.set(key, stringifyQuery(value));
@@ -177,6 +187,9 @@ export async function execute(
 ): Promise<ApiResult> {
   const secrets = [creds.apiKey];
   const request = buildRequest(endpoint, args, creds);
+  if ("invalid" in request) {
+    return fail("config", `Invalid path parameter(s) for ${endpoint.tool}: ${request.invalid.join(", ")} (must be non-empty, not "." or "..", and contain no slashes).`);
+  }
   if ("missing" in request) {
     return fail("config", `Missing required parameter(s) for ${endpoint.tool}: ${request.missing.join(", ")}.`);
   }
@@ -253,6 +266,11 @@ export async function execute(
   }
 }
 
+export const MAX_ERROR_TEXT = 500;
+function truncate(text: string): string {
+  return text.length > MAX_ERROR_TEXT ? `${text.slice(0, MAX_ERROR_TEXT)}…[truncated]` : text;
+}
+
 function httpError(
   endpoint: EndpointSpec,
   status: number,
@@ -264,9 +282,10 @@ function httpError(
     | { code?: unknown; message?: unknown; details?: unknown }
     | undefined;
   const code = typeof err?.code === "string" ? err.code : undefined;
-  const apiMessage =
-    typeof err?.message === "string" ? err.message : redact(text.slice(0, 300), secrets) || "no error body";
-  const details = err?.details !== undefined ? ` Details: ${JSON.stringify(err.details)}` : "";
+  const apiMessage = truncate(
+    redact(typeof err?.message === "string" ? err.message : text.slice(0, 300), secrets) || "no error body",
+  );
+  const details = err?.details !== undefined ? ` Details: ${truncate(redact(JSON.stringify(err.details) ?? "", secrets))}` : "";
   const label = `FreeITSM error${code ? ` ${code}` : ""} (HTTP ${status})`;
 
   if (status === 403 && (code === "forbidden" || code === undefined)) {
