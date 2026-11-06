@@ -1,0 +1,52 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.WYRE-AI/freeitsm-mcp",
+  "title": "FreeITSM",
+  "description": "MCP server for the FreeITSM REST API (tickets, assets, problems, changes, knowledge, CMDB and more).",
+  "repository": {
+    "url": "https://github.com/WYRE-AI/freeitsm-mcp",
+    "source": "github"
+  },
+  "version": "0.0.0",
+  "websiteUrl": "https://github.com/WYRE-AI/freeitsm-mcp",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/wyre-ai/freeitsm-mcp:0.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "MCP_TRANSPORT",
+          "description": "Transport mode; fixed to stdio for this package (the image defaults to http)",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string",
+          "value": "stdio"
+        },
+        {
+          "name": "FREEITSM_BASE_URL",
+          "description": "Base URL of your FreeITSM install (https)",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "FREEITSM_API_KEY",
+          "description": "FreeITSM API key (fitsm_...)",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "FREEITSM_TOOL_TIERS",
+          "description": "Comma-separated tiers to expose: read, write, admin (default read)",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

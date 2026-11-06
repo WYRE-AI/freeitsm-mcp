@@ -1,0 +1,383 @@
+{
+  "defaultTiers": [
+    "read"
+  ],
+  "tools": {
+    "freeitsm_ping": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_tickets_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_ticket_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_ticket_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_ticket_restore": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_ticket_notes_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_note_add": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_ticket_thread_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_audit_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_sla_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_time_entries_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_time_entry_log": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_ticket_time_entry_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_assets_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_asset_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_asset_assignments_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_assign": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_asset_unassign": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_asset_history_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_disks_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_network_adapters_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_software_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_problems_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_problem_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_problem_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_problem_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_problem_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_problem_notes_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_problem_note_add": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_problem_ticket_link": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_changes_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_change_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_change_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_change_comments_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_comment_add": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_change_audit_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_approvals_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_cancel": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_knowledge_articles_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_knowledge_article_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_knowledge_article_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_knowledge_article_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_knowledge_article_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_tasks_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_task_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_task_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_task_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_task_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_task_comments_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_task_comment_add": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_cmdb_classes_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_cmdb_objects_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_impact_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_tickets_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_cmdb_object_ticket_link": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_contracts_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_contract_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_services_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_service_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_service_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_service_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_service_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_incidents_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_incident_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_incident_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_incident_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_incident_delete": {
+      "tier": "admin",
+      "destructive": true
+    },
+    "freeitsm_jobs_health_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_users_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_user_get": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_user_create": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_user_update": {
+      "tier": "write",
+      "destructive": false
+    },
+    "freeitsm_analysts_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_companies_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_statuses_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_priorities_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_ticket_types_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_origins_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_departments_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_types_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_asset_statuses_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_suppliers_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_problem_statuses_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_statuses_list": {
+      "tier": "read",
+      "destructive": false
+    },
+    "freeitsm_change_types_list": {
+      "tier": "read",
+      "destructive": false
+    }
+  }
+}
