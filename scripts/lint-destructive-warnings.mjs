@@ -56,15 +56,17 @@ for (const root of roots) {
   for (const file of walk(resolve(root))) {
     const src = readFileSync(file, 'utf8');
     const nameRegex = /(?:name|tool):\s*['"]([a-zA-Z0-9_]+)['"]/g;
-    let match;
-    while ((match = nameRegex.exec(src)) !== null) {
+    const matches = [...src.matchAll(nameRegex)];
+    for (const [i, match] of matches.entries()) {
       const toolName = match[1];
       const lower = toolName.toLowerCase();
 
       if (SKIP_PATTERNS.some(p => p.test(lower))) continue;
       if (!DESTRUCTIVE_VERBS.some(v => lower.includes(v))) continue;
 
-      const window = src.slice(match.index, match.index + 1200);
+      // Bound the scan to this definition: it ends where the next tool name starts.
+      const end = i + 1 < matches.length ? matches[i + 1].index : src.length;
+      const window = src.slice(match.index, end);
       const hasWarningPrefix = /⚠\s*(DESTRUCTIVE|HIGH-IMPACT)/.test(window);
       const hasDestructiveHint = /destructiveHint\s*:\s*true|destructive\s*:\s*true/.test(window);
 

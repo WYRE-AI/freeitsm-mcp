@@ -112,7 +112,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "tickets.create",
-    description: "Create a ticket. Creates a ticket exactly like the UI: the requester is found or created by email, the description becomes the ticket's initial message, an audit entry is written and the workflow engine fires ticket.created. Defaults: status Open, priority Normal, unassigned, the key's default company. Requires API-key permission 'tickets.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create a ticket. Creates a ticket exactly like the UI: the requester is found or created by email, the description becomes the ticket's initial message, an audit entry is written and the workflow engine fires ticket.created. Defaults: status Open, priority Normal, unassigned, the key's default company. Requires API-key permission 'tickets.create'.",
     params: {
       subject: {
         in: "body",
@@ -215,7 +215,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "tickets.update",
-    description: "Update a ticket. Updates any combination of fields. Behaves exactly like the UI: closing/reopening maintains closed_datetime, assignment keeps owner in sync and sends the assignment email, closing sends the closure email and can auto-trigger CSAT, every change is written to the audit log, and the workflow engine fires status/priority/assignment events. Send only the fields you want to change; explicit null clears a nullable field. Requires API-key permission 'tickets.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update a ticket. Updates any combination of fields. Behaves exactly like the UI: closing/reopening maintains closed_datetime, assignment keeps owner in sync and sends the assignment email, closing sends the closure email and can auto-trigger CSAT, every change is written to the audit log, and the workflow engine fires status/priority/assignment events. Send only the fields you want to change; explicit null clears a nullable field. Requires API-key permission 'tickets.update'.",
     params: {
       id: {
         in: "path",
@@ -353,7 +353,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "ticket_notes.create",
-    description: "Add a note. Adds a note attributed to the analyst the key acts as. Defaults to internal (private). Requires API-key permission 'ticket_notes.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Add a note. Adds a note attributed to the analyst the key acts as. Defaults to internal (private). Requires API-key permission 'ticket_notes.create'.",
     params: {
       id: {
         in: "path",
@@ -449,7 +449,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "ticket_time_entries.create",
-    description: "Log time. Logs time against the ticket, attributed to the analyst the key acts as. Requires API-key permission 'ticket_time_entries.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Log time. Logs time against the ticket, attributed to the analyst the key acts as. Requires API-key permission 'ticket_time_entries.create'.",
     params: {
       id: {
         in: "path",
@@ -588,7 +588,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "assets.create",
-    description: "Create an asset. Creates an asset record. hostname is the identity the inventory agent and Intune sync upsert on, so a duplicate hostname is refused (409) — PATCH the existing asset instead. All other fields are optional and match PATCH below. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved. Requires API-key permission 'assets.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create an asset. Creates an asset record. hostname is the identity the inventory agent and Intune sync upsert on, so a duplicate hostname is refused (409) — PATCH the existing asset instead. All other fields are optional and match PATCH below. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved. Requires API-key permission 'assets.create'.",
     params: {
       hostname: {
         in: "body",
@@ -707,7 +707,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "assets.update",
-    description: "Update an asset. Updates any combination of fields. Every change is written to the asset history with the same field keys the UI uses; changing warranty_expiry re-syncs the calendar's warranty events. Send only what changes; null clears a field. Unknown lookup ids are a 422. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved. Requires API-key permission 'assets.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update an asset. Updates any combination of fields. Every change is written to the asset history with the same field keys the UI uses; changing warranty_expiry re-syncs the calendar's warranty events. Send only what changes; null clears a field. Unknown lookup ids are a 422. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved. Requires API-key permission 'assets.update'.",
     params: {
       id: {
         in: "path",
@@ -817,7 +817,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "asset_assignments.create",
-    description: "Assign (check out). Assigns the asset to an existing requester — exactly like the UI: the custody log records a check-out and the history records the assignment. The requester must already exist (create one with POST /users). Requires API-key permission 'asset_assignments.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Assign (check out). Assigns the asset to an existing requester — exactly like the UI: the custody log records a check-out and the history records the assignment. The requester must already exist (create one with POST /users). Requires API-key permission 'asset_assignments.create'.",
     params: {
       id: {
         in: "path",
@@ -1023,7 +1023,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "problems.create",
-    description: "Create a problem. Creates a problem exactly like the UI: PRB-##### number stamped automatically, default status applied if none given, a \"created\" entry written to the audit trail. Defaults to the key's default company. Requires API-key permission 'problems.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create a problem. Creates a problem exactly like the UI: PRB-##### number stamped automatically, default status applied if none given, a \"created\" entry written to the audit trail. Defaults to the key's default company. Requires API-key permission 'problems.create'.",
     params: {
       title: {
         in: "body",
@@ -1105,7 +1105,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "problems.update",
-    description: "Update a problem. Updates any combination of fields. Every change lands in the problem audit trail with the same field keys the UI writes; moving into a closed status sets closed_at (and reopening clears it). Send only what changes; null clears nullable fields. Requires API-key permission 'problems.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update a problem. Updates any combination of fields. Every change lands in the problem audit trail with the same field keys the UI writes; moving into a closed status sets closed_at (and reopening clears it). Send only what changes; null clears nullable fields. Requires API-key permission 'problems.update'.",
     params: {
       id: {
         in: "path",
@@ -1204,7 +1204,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "problem_notes.create",
-    description: "Add a journal note. Appends a note attributed to the analyst the key acts as. Notes are immutable — no edit or delete, same as the UI. Requires API-key permission 'problem_notes.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Add a journal note. Appends a note attributed to the analyst the key acts as. Notes are immutable — no edit or delete, same as the UI. Requires API-key permission 'problem_notes.create'.",
     params: {
       id: {
         in: "path",
@@ -1227,7 +1227,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "problem_links.create",
-    description: "Link an incident. Links a ticket to the problem. The ticket must belong to the same company as the problem (multi-company installs) and be visible to the key. Already linked → 409. Requires API-key permission 'problem_links.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Link an incident. Links a ticket to the problem. The ticket must belong to the same company as the problem (multi-company installs) and be visible to the key. Already linked → 409. Requires API-key permission 'problem_links.create'.",
     params: {
       id: {
         in: "path",
@@ -1363,7 +1363,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "changes.create",
-    description: "Create a change. Creates a change exactly like the UI: defaults Normal / Draft / Medium / Medium, risk score and level computed server-side from likelihood × impact (1-5 each), a creation entry written to the audit trail. The CHG-#### reference is derived from the id. Requires API-key permission 'changes.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create a change. Creates a change exactly like the UI: defaults Normal / Draft / Medium / Medium, risk score and level computed server-side from likelihood × impact (1-5 each), a creation entry written to the audit trail. The CHG-#### reference is derived from the id. Requires API-key permission 'changes.create'.",
     params: {
       title: {
         in: "body",
@@ -1514,7 +1514,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "changes.update",
-    description: "Update a change. Updates any combination of fields with full audit parity: human field labels, display names for lookups, status changes marked as such, risk score/level recomputed when likelihood/impact change, and the change.approved workflow event on a genuine transition into Approved. Plan bodies update silently (the UI does not audit long text). Send only what changes. Requires API-key permission 'changes.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update a change. Updates any combination of fields with full audit parity: human field labels, display names for lookups, status changes marked as such, risk score/level recomputed when likelihood/impact change, and the change.approved workflow event on a genuine transition into Approved. Plan bodies update silently (the UI does not audit long text). Send only what changes. Requires API-key permission 'changes.update'.",
     params: {
       id: {
         in: "path",
@@ -1595,7 +1595,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "change_comments.create",
-    description: "Add a comment. Adds an internal comment attributed to the analyst the key acts as; a preview is written to the audit trail. Comments cannot be edited (parity with the UI). Requires API-key permission 'change_comments.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Add a comment. Adds an internal comment attributed to the analyst the key acts as; a preview is written to the audit trail. Comments cannot be edited (parity with the UI). Requires API-key permission 'change_comments.create'.",
     params: {
       id: {
         in: "path",
@@ -1652,7 +1652,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "changes.update",
-    description: "Cancel a change. Moves the change to the first active status in the Stopped stage and withdraws any open approval round, keeping every record. What a change with approval history gets instead of DELETE where the approval rules (and always Enforce mode) refuse to delete it. Returns the change. Requires API-key permission 'changes.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Cancel a change. Moves the change to the first active status in the Stopped stage and withdraws any open approval round, keeping every record. What a change with approval history gets instead of DELETE where the approval rules (and always Enforce mode) refuse to delete it. Returns the change. Requires API-key permission 'changes.update'.",
     params: {
       id: {
         in: "path",
@@ -1674,7 +1674,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "read",
     destructive: false,
     permission: "knowledge.read",
-    description: "List / search articles. Lists published articles with keyword search (title + body), tag filter and the review-cycle filters the module's review screen uses. archived=true lists the recycle bin instead (and runs the same retention auto-purge as the UI). The knowledge base is install-wide. Requires API-key permission 'knowledge.read'.",
+    description: "List / search articles. Lists published articles with keyword search (title + body), tag filter and the review-cycle filters the module's review screen uses. The knowledge base is install-wide. Requires API-key permission 'knowledge.read'.",
     params: {
       q: {
         in: "query",
@@ -1702,10 +1702,6 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
         in: "query",
         description: "ISO 8601 — for sync jobs",
       },
-      archived: {
-        in: "query",
-        description: "true lists the recycle bin instead",
-      },
       sort: {
         in: "query",
         description: "modified_at (default, desc), created_at, title, view_count, next_review_date, id — prefix \"-\" for descending",
@@ -1729,7 +1725,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "knowledge.create",
-    description: "Create an article. Creates an article, published immediately (the product has no draft workflow). Tags are created on the fly by name. If the module's OpenAI key is configured the search embedding is generated automatically, so AI chat finds API-written articles. Body is HTML stored as-is — send trusted HTML only. Requires API-key permission 'knowledge.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create an article. Creates an article, published immediately (the product has no draft workflow). Tags are created on the fly by name. If the module's OpenAI key is configured the search embedding is generated automatically, so AI chat finds API-written articles. Body is HTML stored as-is — send trusted HTML only. Requires API-key permission 'knowledge.create'.",
     params: {
       title: {
         in: "body",
@@ -1787,7 +1783,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "knowledge.update",
-    description: "Update an article. Updates title, body, tags (replaces the set), owner and review date. Pass save_as_version=true to snapshot the CURRENT content into the version history and bump the version number — exactly like the UI's \"Save as new version\". The search embedding is refreshed automatically. Requires API-key permission 'knowledge.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update an article. Updates title, body, tags (replaces the set), owner and review date. Pass save_as_version=true to snapshot the CURRENT content into the version history and bump the version number — exactly like the UI's \"Save as new version\". The search embedding is refreshed automatically. Requires API-key permission 'knowledge.update'.",
     params: {
       id: {
         in: "path",
@@ -1944,7 +1940,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "tasks.create",
-    description: "Create a task. Creates a task exactly like the UI: defaults To Do / Medium, the card is appended to the end of its status column. Links to a ticket/change/contract are validated (a ticket link must be within the key's company scope); parent_task_id makes it a subtask. Tags must already exist (they're a curated list in Tasks > Settings). Requires API-key permission 'tasks.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create a task. Creates a task exactly like the UI: defaults To Do / Medium, the card is appended to the end of its status column. Links to a ticket/change/contract are validated (a ticket link must be within the key's company scope); parent_task_id makes it a subtask. Tags must already exist (they're a curated list in Tasks > Settings). Requires API-key permission 'tasks.create'.",
     params: {
       title: {
         in: "body",
@@ -2046,13 +2042,86 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "tasks.update",
-    description: "Update a task. Updates any combination of fields; null clears. Moving to a closed status stamps completed_at and fires the task.completed workflow event (moving back clears it). tags replaces the tag set. Requires API-key permission 'tasks.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update a task. Updates any combination of fields; null clears. Moving to a closed status stamps completed_at and fires the task.completed workflow event (moving back clears it). tags replaces the tag set. Requires API-key permission 'tasks.update'.",
     params: {
       id: {
         in: "path",
         type: "integer",
         required: true,
         description: "Task id",
+      },
+      title: {
+        in: "body",
+        type: "string",
+        description: "Task title",
+      },
+      description: {
+        in: "body",
+        description: "Details",
+      },
+      status: {
+        in: "body",
+        type: "string",
+        description: "By name or id",
+      },
+      status_id: {
+        in: "body",
+        type: "integer",
+        description: "By name or id",
+      },
+      priority: {
+        in: "body",
+        type: "string",
+        description: "By name or id",
+      },
+      priority_id: {
+        in: "body",
+        type: "integer",
+        description: "By name or id",
+      },
+      assigned_analyst_id: {
+        in: "body",
+        type: "integer",
+        description: "Assignment",
+      },
+      assigned_team_id: {
+        in: "body",
+        type: "integer",
+        description: "Assignment",
+      },
+      start_date: {
+        in: "body",
+        description: "YYYY-MM-DD. estimate_hours (3.3.0): how long it should take, in hours (e.g. 1.5); null = not estimated",
+      },
+      due_date: {
+        in: "body",
+        type: "string",
+        description: "YYYY-MM-DD. estimate_hours (3.3.0): how long it should take, in hours (e.g. 1.5); null = not estimated",
+      },
+      parent_task_id: {
+        in: "body",
+        type: "integer",
+        description: "Make this a subtask of this task",
+      },
+      ticket_id: {
+        in: "body",
+        type: "integer",
+        description: "Link to a record",
+      },
+      change_id: {
+        in: "body",
+        type: "integer",
+        description: "Link to a record",
+      },
+      contract_id: {
+        in: "body",
+        type: "integer",
+        description: "Link to a record",
+      },
+      tags: {
+        in: "body",
+        type: "array",
+        description: "Array of existing tag names or ids",
       },
       board_position: {
         in: "body",
@@ -2101,7 +2170,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "task_comments.create",
-    description: "Add a comment. Appends a comment attributed to the analyst the key acts as. Comments cannot be edited or deleted (parity with the UI). Requires API-key permission 'task_comments.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Add a comment. Appends a comment attributed to the analyst the key acts as. Comments cannot be edited or deleted (parity with the UI). Requires API-key permission 'task_comments.create'.",
     params: {
       id: {
         in: "path",
@@ -2182,7 +2251,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "cmdb_objects.create",
-    description: "Create an object. Creates a CI. Properties are sent as a map keyed by property_key and validated exactly like the UI: numbers must be numeric, object_ref values must exist (and match the property's target class), required properties enforced — plus dropdown values are checked against the option list (tighter than the UI). Class is immutable after creation. Requires API-key permission 'cmdb_objects.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create an object. Creates a CI. Properties are sent as a map keyed by property_key and validated exactly like the UI: numbers must be numeric, object_ref values must exist (and match the property's target class), required properties enforced — plus dropdown values are checked against the option list (tighter than the UI). Class is immutable after creation. Requires API-key permission 'cmdb_objects.create'.",
     params: {
       name: {
         in: "body",
@@ -2241,7 +2310,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "cmdb_objects.update",
-    description: "Update an object. Updates name, parent (cycle-checked), is_planned and any property values — only the properties you send are touched (required checks apply only to sent properties, like the UI's inline edit). Empty/null clears a property. Requires API-key permission 'cmdb_objects.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update an object. Updates name, parent (cycle-checked), is_planned and any property values — only the properties you send are touched (required checks apply only to sent properties, like the UI's inline edit). Empty/null clears a property. Requires API-key permission 'cmdb_objects.update'.",
     params: {
       id: {
         in: "path",
@@ -2312,7 +2381,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "cmdb_ticket_links.create",
-    description: "Link a ticket. Links a ticket to this CI. The ticket must be within the key's company scope; already linked → 409. Requires API-key permission 'cmdb_ticket_links.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Link a ticket. Links a ticket to this CI. The ticket must be within the key's company scope; already linked → 409. Requires API-key permission 'cmdb_ticket_links.create'.",
     params: {
       id: {
         in: "path",
@@ -2465,7 +2534,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "services.create",
-    description: "Add a service. Only name is required. Requires API-key permission 'services.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Add a service. Only name is required. Requires API-key permission 'services.create'.",
     params: {
       name: {
         in: "body",
@@ -2521,6 +2590,26 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
         type: "integer",
         required: true,
         description: "Service id",
+      },
+      name: {
+        in: "body",
+        type: "string",
+        description: "Service name",
+      },
+      description: {
+        in: "body",
+        type: "string",
+        description: "Optional",
+      },
+      display_order: {
+        in: "body",
+        type: "integer",
+        description: "Optional",
+      },
+      is_active: {
+        in: "body",
+        type: "boolean",
+        description: "Optional",
       },
     },
   },
@@ -2590,7 +2679,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "service_incidents.create",
-    description: "Open an incident. The monitoring-integration verb: title required, status defaults Investigating, and services is an array of {service_id, impact_level} pairs (impact by name or impact_level_id; defaults to the configured default impact level). Unknown service/impact values are a 422 — stricter than the UI, which silently skips them. Creating directly in a resolved status stamps resolved_at. Requires API-key permission 'service_incidents.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Open an incident. The monitoring-integration verb: title required, status defaults Investigating, and services is an array of {service_id, impact_level} pairs (impact by name or impact_level_id; defaults to the configured default impact level). Unknown service/impact values are a 422 — stricter than the UI, which silently skips them. Creating directly in a resolved status stamps resolved_at. Requires API-key permission 'service_incidents.create'.",
     params: {
       title: {
         in: "body",
@@ -2644,7 +2733,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "service_incidents.update",
-    description: "Update / resolve. Update title, status, comment, and/or replace the affected-services set. Moving to a resolved status stamps resolved_at once (preserved if already set); reopening clears it — the UI's exact rule. Requires API-key permission 'service_incidents.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update / resolve. Update title, status, comment, and/or replace the affected-services set. Moving to a resolved status stamps resolved_at once (preserved if already set); reopening clears it — the UI's exact rule. Requires API-key permission 'service_incidents.update'.",
     params: {
       id: {
         in: "path",
@@ -2758,7 +2847,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "users.create",
-    description: "Create a requester. Creates a requester. Note POST /tickets creates requesters automatically — use this for directory sync. Requires API-key permission 'users.create'. Additional body fields documented for this endpoint are passed through.",
+    description: "Create a requester. Creates a requester. Note POST /tickets creates requesters automatically — use this for directory sync. Requires API-key permission 'users.create'.",
     params: {
       email: {
         in: "body",
@@ -2790,7 +2879,7 @@ export const ENDPOINTS: readonly EndpointSpec[] = [
     tier: "write",
     destructive: false,
     permission: "users.update",
-    description: "Update a requester. Updates email and/or names, or marks them as left with is_active false (they stay on record, cannot sign in to the portal by any route, and an open portal session ends). Requires API-key permission 'users.update'. Additional body fields documented for this endpoint are passed through.",
+    description: "Update a requester. Updates email and/or names, or marks them as left with is_active false (they stay on record, cannot sign in to the portal by any route, and an open portal session ends). Requires API-key permission 'users.update'.",
     params: {
       id: {
         in: "path",

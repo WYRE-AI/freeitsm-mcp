@@ -5,6 +5,8 @@ It exposes **94 tools** (55 read, 30 write, 9 admin): tickets, assets, problems,
 
 ## Quick start
 
+Runtime requires Node.js >= 20.18.1. Development (ESLint, Vitest) requires Node.js ^22.13.0 || ^24.0.0 || >=26.0.0.
+
 ```bash
 npm ci
 npm run build
@@ -74,7 +76,7 @@ docker compose up   # requires CONDUIT_S2S_SECRET
 - Success bodies are `{data, meta?}`. Tools return `{"data": ..., "meta": ...}`, with `meta` carrying pagination (`page`, `per_page`, `total`, `total_pages`). List tools take `page` and `per_page` (max 100).
 - Errors are `{error:{code,message,details?}}`; tool errors read `FreeITSM error <code> (HTTP <status>): <message>`.
 - HTTP 429 is retried once, after `Retry-After` (up to 30s); otherwise it is returned as a tool error.
-- Path parameters are URL-encoded. Write tools send any extra arguments through as JSON body fields.
+- Path parameters are URL-encoded. Only declared parameters are sent; tool schemas reject undeclared arguments.
 
 ## Tools
 

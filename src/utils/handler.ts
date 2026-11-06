@@ -16,7 +16,6 @@ function toTool(endpoint: EndpointSpec): Tool {
   const required = Object.entries(endpoint.params)
     .filter(([, param]) => param.in === "path" || param.required)
     .map(([key]) => key);
-  const writes = endpoint.method === "POST" || endpoint.method === "PATCH";
   return {
     name: endpoint.tool,
     // Destructive warnings are written into the description itself (see endpoints.ts).
@@ -33,8 +32,8 @@ function toTool(endpoint: EndpointSpec): Tool {
         ]),
       ),
       required,
-      // Write endpoints accept more body fields than are listed here.
-      additionalProperties: writes,
+      // Only declared params are forwarded (see buildRequest).
+      additionalProperties: false,
     },
     annotations: {
       destructiveHint: endpoint.destructive,
