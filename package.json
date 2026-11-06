@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asachs01/freeitsm-mcp.git"
+    "url": "git+https://github.com/WYRE-AI/freeitsm-mcp.git"
   },
   "keywords": ["mcp", "claude", "freeitsm", "itsm", "service-desk"],
   "author": "Aaron Sachs",

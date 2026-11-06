@@ -1,18 +1,18 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.asachs01/freeitsm-mcp",
+  "name": "io.github.WYRE-AI/freeitsm-mcp",
   "title": "FreeITSM",
   "description": "MCP server for the FreeITSM REST API (tickets, assets, problems, changes, knowledge, CMDB and more).",
   "repository": {
-    "url": "https://github.com/asachs01/freeitsm-mcp",
-    "source": "https://github.com/asachs01/freeitsm-mcp"
+    "url": "https://github.com/WYRE-AI/freeitsm-mcp",
+    "source": "github"
   },
   "version": "0.0.0",
-  "websiteUrl": "https://github.com/asachs01/freeitsm-mcp",
+  "websiteUrl": "https://github.com/WYRE-AI/freeitsm-mcp",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/asachs01/freeitsm-mcp:0.0.0",
+      "identifier": "ghcr.io/wyre-ai/freeitsm-mcp:0.0.0",
       "transport": {
         "type": "stdio"
       },
