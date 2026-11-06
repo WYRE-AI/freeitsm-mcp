@@ -108,6 +108,15 @@ describe("FreeITSM tool call", () => {
     expect((result.content[0] as { text: string }).text).toContain("not_found");
   });
 
+  it("rejects undeclared arguments without calling the API", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await callTool("freeitsm_tickets_list", { stat: "open" }, credentials);
+    expect(result.isError).toBe(true);
+    expect((result.content[0] as { text: string }).text).toContain("stat");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("refuses tools whose tier is not enabled, without calling the API", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);

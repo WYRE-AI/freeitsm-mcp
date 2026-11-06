@@ -32,7 +32,7 @@ function toTool(endpoint: EndpointSpec): Tool {
         ]),
       ),
       required,
-      // Only declared params are forwarded (see buildRequest).
+      // Enforced in callTool: undeclared arguments are rejected.
       additionalProperties: false,
     },
     annotations: {
@@ -56,6 +56,10 @@ export async function callTool(
   if (!endpoint) return errorResult(`Unknown tool: ${tool}`);
   if (!isToolEnabled(tool, getEnabledTiers())) {
     return errorResult(`Tool ${tool} requires the "${TOOL_TIERS[tool].tier}" tier, which is not enabled (set FREEITSM_TOOL_TIERS).`);
+  }
+  const undeclared = Object.keys(args).filter((key) => !Object.hasOwn(endpoint.params, key));
+  if (undeclared.length > 0) {
+    return errorResult(`Unknown argument(s) for ${tool}: ${undeclared.join(", ")}.`);
   }
   const result = await execute(endpoint, args, creds);
   if (!result.ok) return errorResult(result.error?.message ?? "FreeITSM request failed.");
